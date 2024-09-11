@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSV Image Grid</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .image-box {
+            margin: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            width: 200px;
+            text-align: center;
+        }
+
+        .image-box img {
+            width: 100%;
+            height: auto;
+        }
+
+        .category {
+            margin-top: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Image Grid from CSV</h1>
+    <div class="container" id="image-container"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <script>
+        // Path to your CSV file
+        const csvFilePath = 'images.csv';
+
+        // Function to load CSV and display images
+        function loadImagesFromCSV() {
+            Papa.parse(csvFilePath, {
+                download: true,
+                header: true,
+                complete: function(results) {
+                    const imageContainer = document.getElementById('image-container');
+                    const data = results.data;
+
+                    data.forEach(row => {
+                        if (row.url && row.category) {
+                            const imageBox = document.createElement('div');
+                            imageBox.className = 'image-box';
+                            
+                            const img = document.createElement('img');
+                            img.src = row.url;
+                            img.alt = 'Image';
+                            
+                            const category = document.createElement('div');
+                            category.className = 'category';
+                            category.textContent = row.category;
+
+                            imageBox.appendChild(img);
+                            imageBox.appendChild(category);
+                            imageContainer.appendChild(imageBox);
+                        }
+                    });
+                }
+            });
+        }
+
+        // Load images on page load
+        window.onload = loadImagesFromCSV;
+    </script>
+
+</body>
+</html>
